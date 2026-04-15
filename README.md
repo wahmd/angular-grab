@@ -1,52 +1,145 @@
 # Angular Grab
 
-**Git repository name:** `angular-grab` — use this folder as the repo root when you push to GitHub/GitLab.
+Grab UI context from a running Angular app and send it to a local MCP server for your coding agent.
 
-This monorepo contains:
+**Repo:** [github.com/wahmd/angular-grab](https://github.com/wahmd/angular-grab)
 
-| Package | Path |
-|--------|------|
-| Angular library (UI + context) | `packages/angular-grab` |
-| MCP + HTTP server (Node) | `packages/angular-grab-mcp` |
+---
 
-Root `package.json` is named **`angular-grab-workspace`** (private) so it does not clash with the npm package name **`angular-grab`** inside `packages/angular-grab`.
+## Use in any Angular app
 
-## Prerequisites
+### 1. Install the library
 
-- **Node.js** 18+ or 20+ ([`.nvmrc`](./.nvmrc))
-- **npm** 9+ (workspaces)
-
-## Setup
+**After it is published to npm:**
 
 ```bash
-npm install
-npm run build:angular-grab
+npm install angular-grab
 ```
 
-Run the MCP server locally:
+**Until then (install the built package from this repo):**
+
+```bash
+git clone https://github.com/wahmd/angular-grab.git
+cd angular-grab && npm ci && npm run build:angular-grab
+```
+
+Then in your app (use the absolute path to `dist/angular-grab` on your machine):
+
+```bash
+npm install /path/to/angular-grab/dist/angular-grab
+```
+
+### 2. Import the module
+
+**`AppModule`:**
+
+```typescript
+import { AngularGrabModule } from 'angular-grab';
+
+@NgModule({
+  imports: [
+    /* ... */
+    AngularGrabModule,
+  ],
+})
+export class AppModule {}
+```
+
+**Standalone app** (root `App` component):
+
+```typescript
+import { AngularGrabModule } from 'angular-grab';
+
+@Component({
+  standalone: true,
+  imports: [AngularGrabModule /* , ... */],
+  // ...
+})
+export class AppComponent {}
+```
+
+### 3. Wrap your root template
+
+Put your entire app shell inside the grab host (selector stays `app-angular-grab`):
+
+```html
+<app-angular-grab>
+  <!-- routers, layout, everything you had at root -->
+</app-angular-grab>
+```
+
+### 4. (Optional) Toasts when MCP send succeeds / fails
+
+Provide `ANGULAR_GRAB_FEEDBACK` from your app (e.g. map to your toast service):
+
+```typescript
+import { ANGULAR_GRAB_FEEDBACK, AngularGrabFeedback } from 'angular-grab';
+
+const feedback: AngularGrabFeedback = {
+  onMcpSuccess: () => {
+    /* toast */
+  },
+  onMcpError: (message?: string) => {
+    /* toast */
+  },
+};
+
+// In @NgModule providers: or provide in bootstrap for standalone
+{ provide: ANGULAR_GRAB_FEEDBACK, useValue: feedback }
+```
+
+If you skip this, grab still works; you just won’t get UI feedback after send.
+
+### 5. Run the MCP server (development)
+
+Agents read grabs from **`http://127.0.0.1:4723`**. Install and run the Node package from this repo (or from npm when `angular-grab-mcp` is published):
+
+```bash
+npm install -D angular-grab-mcp
+```
+
+Add scripts to your app’s **`package.json`**:
+
+```json
+{
+  "scripts": {
+    "angular-grab-mcp": "angular-grab-mcp",
+    "angular-grab-mcp:force": "angular-grab-mcp --force"
+  }
+}
+```
+
+Start it while you develop:
 
 ```bash
 npm run angular-grab-mcp
 ```
 
-## Push to your remote
+Point your IDE’s MCP client at **`http://127.0.0.1:4723/mcp`** (same process as the browser `POST /context`). Optional: `npm exec angular-grab -- init` / `add mcp` from the `angular-grab-mcp` package for Cursor config helpers.
 
-After creating an empty **`angular-grab`** repository on GitHub:
+---
+
+## Requirements
+
+- **Angular** version compatible with the library’s `peerDependencies` in `packages/angular-grab/package.json` (currently **Angular 13** range; widen when you upgrade the lib).
+
+---
+
+## Monorepo (this repository)
+
+| Package | Role |
+|--------|------|
+| `packages/angular-grab` | Angular library |
+| `packages/angular-grab-mcp` | MCP + HTTP server |
 
 ```bash
-git remote add origin https://github.com/YOUR_ORG/angular-grab.git
-git branch -M main
-git push -u origin main
+npm install
+npm run build:angular-grab
+npm run angular-grab-mcp
 ```
 
-(See [SETUP.md](./SETUP.md) if you are initializing Git from scratch.)
-
-## Publishing to npm
-
-1. Bump versions in `packages/angular-grab/package.json` and/or `packages/angular-grab-mcp/package.json`.
-2. `npm run build:angular-grab` (output: `dist/angular-grab/`).
-3. Publish from each package directory (set `"private": false` and your scope as needed).
+Root `package.json` name is **`angular-grab-workspace`** (private). The installable Angular package name is **`angular-grab`**.
 
 ## License
 
-See [LICENSE](./LICENSE).
+MIT — see [LICENSE](./LICENSE).
