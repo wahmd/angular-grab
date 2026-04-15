@@ -1,0 +1,27 @@
+{
+  "name": "angular-grab-workspace",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Workspace root for the angular-grab Git repo (Angular library + angular-grab-mcp server)",
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "build:angular-grab": "ng-packagr -p packages/angular-grab/ng-package.json",
+    "angular-grab-mcp": "node packages/angular-grab-mcp/src/server.mjs",
+    "angular-grab-mcp:force": "node packages/angular-grab-mcp/src/server.mjs --force",
+    "angular-grab": "node packages/angular-grab-mcp/src/cli.mjs"
+  },
+  "devDependencies": {
+    "@angular/compiler": "~13.0.0",
+    "@angular/compiler-cli": "~13.0.0",
+    "@angular/core": "~13.0.0",
+    "@angular/common": "~13.0.0",
+    "@types/node": "12.20.55",
+    "ng-packagr": "^13.3.1",
+    "typescript": "~4.4.3"
+  },
+  "overrides": {
+    "@types/node": "12.20.55"
+  }
+}

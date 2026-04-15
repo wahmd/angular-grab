@@ -1,0 +1,27 @@
+name: CI
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: ".nvmrc"
+          cache: "npm"
+
+      - name: Install
+        run: npm ci --legacy-peer-deps
+
+      - name: Build Angular library
+        run: npm run build:angular-grab
+
+      - name: Check MCP server syntax
+        run: node --check packages/angular-grab-mcp/src/server.mjs

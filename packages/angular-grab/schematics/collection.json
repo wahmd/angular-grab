@@ -1,0 +1,10 @@
+{
+  "schematics": {
+    "ng-add": {
+      "description": "Configure npm scripts for the Angular Grab MCP server (optional).",
+      "factory": "./ng-add/index#ngAdd",
+      "schema": "./ng-add/schema.json",
+      "aliases": ["install"]
+    }
+  }
+}

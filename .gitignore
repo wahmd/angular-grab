@@ -1,0 +1,32 @@
+# Dependencies
+node_modules/
+
+# Builds
+dist/
+out-tsc/
+*.tgz
+
+# Angular
+.angular/
+
+# Logs & cache
+npm-debug.log*
+.cache/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+*.swp
+*.swo
+.vscode/*
+!.vscode/extensions.json
+
+# Env
+.env
+.env.*
+
+# Test / coverage
+coverage/

@@ -1,0 +1,25 @@
+{
+  "name": "angular-grab-mcp",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Local MCP server + HTTP ingest for Angular Grab (Node package; deps installed via repo root npm workspaces).",
+  "bin": {
+    "angular-grab-mcp": "./src/server.mjs",
+    "angular-grab": "./src/cli.mjs"
+  },
+  "scripts": {
+    "start": "node src/server.mjs",
+    "start:stdio": "node src/server.mjs --stdio",
+    "init": "node src/cli.mjs init",
+    "add-mcp": "node src/cli.mjs add mcp"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.25.0",
+    "fkill": "^9.0.0",
+    "jsonc-parser": "^3.3.1",
+    "prompts": "^2.4.2",
+    "smol-toml": "^1.4.2",
+    "zod": "^3.25.0"
+  }
+}
